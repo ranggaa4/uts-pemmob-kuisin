@@ -33,7 +33,7 @@ class OptionTile extends StatelessWidget {
             color: selected ? AppColors.indigo : Colors.white,
             borderRadius: BorderRadius.circular(base * 0.035),
             border: Border.all(
-              color: selected ? AppColors.indigo : AppColors.indigo.withOpacity(0.15),
+              color: selected ? AppColors.indigo : AppColors.indigo.withValues(alpha: 0.15),
               width: 1.5,
             ),
           ),
