@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'providers/quiz_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_colors.dart';
 
 void main() {
-  runApp(const KuisinApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => QuizProvider(),
+      child: const KuisinApp(),
+    ),
+  );
 }
 
 class KuisinApp extends StatelessWidget {
