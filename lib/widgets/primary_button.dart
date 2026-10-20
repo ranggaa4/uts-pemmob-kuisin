@@ -4,7 +4,8 @@ import '../theme/app_colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  // kalau null, tombol otomatis nonaktif
+  final VoidCallback? onPressed;
 
   const PrimaryButton({
     super.key,
@@ -24,6 +25,8 @@ class PrimaryButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.amber,
           foregroundColor: AppColors.ink,
+          disabledBackgroundColor: AppColors.amber.withValues(alpha: 0.4),
+          disabledForegroundColor: AppColors.ink.withValues(alpha: 0.4),
           elevation: 0,
           padding: EdgeInsets.symmetric(vertical: base * 0.038),
           shape: RoundedRectangleBorder(

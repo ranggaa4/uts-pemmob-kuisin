@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/quiz_provider.dart';
 import '../theme/app_colors.dart';
 import '../widgets/primary_button.dart';
 import 'quiz_screen.dart';
@@ -25,14 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final nama = _namaController.text.trim();
 
     if (nama.isEmpty) {
-      setState(() => _errorNama = 'Isi namamu dulu ya');
+      setState(() => _errorNama = 'Isi namamu dulu ya!');
       return;
     }
 
     setState(() => _errorNama = null);
+    context.read<QuizProvider>().mulai(nama);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => QuizScreen(nama: nama)),
+      MaterialPageRoute(builder: (_) => const QuizScreen()),
     );
   }
 
@@ -65,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: size.width * 0.7,
               height: size.width * 0.7,
               decoration: BoxDecoration(
-                color: AppColors.indigo.withOpacity(0.12),
+                color: AppColors.indigo.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
             ),
@@ -102,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: base * 0.04,
-                          color: AppColors.ink.withOpacity(0.7),
+                          color: AppColors.ink.withValues(alpha: 0.7),
                         ),
                       ),
                       SizedBox(height: base * 0.1),
@@ -113,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(base * 0.05),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.indigo.withOpacity(0.1),
+                              color: AppColors.indigo.withValues(alpha: 0.1),
                               blurRadius: base * 0.05,
                               offset: Offset(0, base * 0.015),
                             ),
@@ -138,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               onSubmitted: (_) => _mulaiKuis(),
                               style: TextStyle(fontSize: base * 0.042),
                               decoration: InputDecoration(
-                                hintText: 'contoh: Budi',
                                 errorText: _errorNama,
                                 prefixIcon: const Icon(Icons.person_outline),
                                 filled: true,
