@@ -106,11 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _namaController,
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.done,
-            maxLength: 20,
+            maxLength: 40,
             onSubmitted: (_) => _mulaiKuis(),
             style: TextStyle(fontSize: u * 0.042, color: w.textPrimary),
             decoration: InputDecoration(
-              hintText: 'contoh: Budi',
+              hintText: 'Siapa yahh',
               counterText: '',
               hintStyle: TextStyle(color: w.textMuted),
               errorText: _errorNama,
@@ -132,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          
           Positioned(
             top: -u * 0.25,
             right: -u * 0.2,
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-
+          
           SafeArea(
             child: Align(
               alignment: Alignment.topRight,
