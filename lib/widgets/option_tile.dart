@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
+import '../utils/responsive.dart';
 
-// satu pilihan jawaban (A/B/C/D)
+
 class OptionTile extends StatelessWidget {
   final String huruf;
   final String label;
@@ -19,45 +20,46 @@ class OptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lebar = MediaQuery.sizeOf(context).width;
-    final base = lebar > 600 ? 600.0 : lebar;
+    final u = context.unit;
+    final w = context.warna;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: base * 0.03),
+      padding: EdgeInsets.only(bottom: u * 0.03),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(base * 0.035),
-        child: Container(
-          padding: EdgeInsets.all(base * 0.035),
+        borderRadius: BorderRadius.circular(u * 0.035),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.all(u * 0.035),
           decoration: BoxDecoration(
-            color: selected ? AppColors.indigo : Colors.white,
-            borderRadius: BorderRadius.circular(base * 0.035),
+            color: selected ? w.primary : w.surface,
+            borderRadius: BorderRadius.circular(u * 0.035),
             border: Border.all(
-              color: selected ? AppColors.indigo : AppColors.indigo.withValues(alpha: 0.15),
+              color: selected ? w.primary : w.outline,
               width: 1.5,
             ),
           ),
           child: Row(
             children: [
               CircleAvatar(
-                radius: base * 0.04,
-                backgroundColor: selected ? AppColors.amber : AppColors.cream,
+                radius: u * 0.04,
+                backgroundColor: selected ? w.accent : w.background,
                 child: Text(
                   huruf,
                   style: TextStyle(
-                    fontSize: base * 0.035,
+                    fontSize: u * 0.035,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.ink,
+                    color: selected ? w.onAccent : w.textPrimary,
                   ),
                 ),
               ),
-              SizedBox(width: base * 0.035),
+              SizedBox(width: u * 0.035),
               Expanded(
                 child: Text(
                   label,
                   style: TextStyle(
-                    fontSize: base * 0.038,
-                    color: selected ? Colors.white : AppColors.ink,
+                    fontSize: u * 0.038,
+                    color: selected ? w.onPrimary : w.textPrimary,
                   ),
                 ),
               ),

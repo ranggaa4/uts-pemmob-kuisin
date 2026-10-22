@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
+import '../utils/responsive.dart';
 
 class QuizProgressBar extends StatelessWidget {
-  final int current; // nomor soal sekarang (mulai dari 1)
+  final int current; 
   final int total;
 
   const QuizProgressBar({
@@ -14,27 +15,24 @@ class QuizProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lebar = MediaQuery.sizeOf(context).width;
-    final base = lebar > 600 ? 600.0 : lebar;
+    final u = context.unit;
+    final w = context.warna;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Soal $current dari $total',
-          style: TextStyle(
-            fontSize: base * 0.035,
-            color: AppColors.ink.withValues(alpha: 0.6),
-          ),
+          style: TextStyle(fontSize: u * 0.035, color: w.textMuted),
         ),
-        SizedBox(height: base * 0.02),
+        SizedBox(height: u * 0.02),
         ClipRRect(
-          borderRadius: BorderRadius.circular(base * 0.02),
+          borderRadius: BorderRadius.circular(u * 0.02),
           child: LinearProgressIndicator(
             value: current / total,
-            minHeight: base * 0.022,
-            color: AppColors.amber,
-            backgroundColor: AppColors.indigo.withValues(alpha: 0.12),
+            minHeight: u * 0.022,
+            color: w.accent,
+            backgroundColor: w.outline,
           ),
         ),
       ],

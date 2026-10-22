@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/quiz_provider.dart';
-import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
+import '../utils/responsive.dart';
 import '../widgets/primary_button.dart';
+import '../widgets/review_tile.dart';
+import '../widgets/secondary_button.dart';
 import 'quiz_screen.dart';
+import 'riwayat_screen.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({super.key});
@@ -17,117 +21,160 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final quiz = context.watch<QuizProvider>();
-    final lebar = MediaQuery.sizeOf(context).width;
-    final base = lebar > 600 ? 600.0 : lebar;
+    
+    final quiz = context.read<QuizProvider>();
+    final u = context.unit;
+    final w = context.warna;
+    final soalSemua = quiz.soalSemua;
+    final jawaban = quiz.jawaban;
+
+    final ringkasan = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircleAvatar(
+          radius: u * 0.13,
+          backgroundColor: w.accent,
+          child: Icon(
+            Icons.emoji_events_rounded,
+            size: u * 0.15,
+            color: w.onAccent,
+          ),
+        ),
+        SizedBox(height: u * 0.06),
+        Text(
+          'Kuis selesai!',
+          style: TextStyle(
+            fontSize: u * 0.07,
+            fontWeight: FontWeight.w700,
+            color: w.judul,
+          ),
+        ),
+        Text(
+          'Skor akhir ${quiz.nama}',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: u * 0.04, color: w.textMuted),
+        ),
+        SizedBox(height: u * 0.05),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: u * 0.06),
+          decoration: BoxDecoration(
+            color: w.surface,
+            borderRadius: BorderRadius.circular(u * 0.05),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: u * 0.05,
+                offset: Offset(0, u * 0.015),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Text(
+                '${quiz.skor}/${quiz.totalSoal}',
+                style: TextStyle(
+                  fontSize: u * 0.16,
+                  fontWeight: FontWeight.w700,
+                  color: w.judul,
+                  height: 1.1,
+                ),
+              ),
+              Text(
+                'Nilai ${quiz.nilai}',
+                style: TextStyle(
+                  fontSize: u * 0.045,
+                  fontWeight: FontWeight.w500,
+                  color: w.textPrimary,
+                ),
+              ),
+              SizedBox(height: u * 0.02),
+              Text(
+                _pesan(quiz.nilai),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: u * 0.038, color: w.textMuted),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: u * 0.07),
+        PrimaryButton(
+          label: 'Main Lagi',
+          onPressed: () {
+            context.read<QuizProvider>().ulangi();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const QuizScreen()),
+            );
+          },
+        ),
+        SizedBox(height: u * 0.03),
+        SecondaryButton(
+          label: 'Kembali ke Beranda',
+          onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
+        ),
+        TextButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const RiwayatScreen()),
+          ),
+          child: Text(
+            'Lihat skor tertinggi',
+            style: TextStyle(fontSize: u * 0.036, color: w.judul),
+          ),
+        ),
+      ],
+    );
+
+    final review = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Review jawaban',
+          style: TextStyle(
+            fontSize: u * 0.05,
+            fontWeight: FontWeight.w700,
+            color: w.textPrimary,
+          ),
+        ),
+        SizedBox(height: u * 0.03),
+        for (int i = 0; i < soalSemua.length; i++)
+          ReviewTile(
+            nomor: i + 1,
+            pertanyaan: soalSemua[i].text,
+            jawabanUser: jawaban[i] == null
+                ? null
+                : soalSemua[i].options[jawaban[i]!],
+            jawabanBenar: soalSemua[i].options[soalSemua[i].correctIndex],
+            benar: jawaban[i] == soalSemua[i].correctIndex,
+          ),
+      ],
+    );
 
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: base * 0.08),
+            padding: EdgeInsets.symmetric(horizontal: u * 0.08, vertical: u * 0.06),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    radius: base * 0.13,
-                    backgroundColor: AppColors.amber,
-                    child: Icon(
-                      Icons.emoji_events_rounded,
-                      size: base * 0.15,
-                      color: AppColors.indigo,
-                    ),
-                  ),
-                  SizedBox(height: base * 0.06),
-                  Text(
-                    'Kuis selesai!',
-                    style: TextStyle(
-                      fontSize: base * 0.07,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.indigo,
-                    ),
-                  ),
-                  Text(
-                    'Skor akhir ${quiz.nama}',
-                    style: TextStyle(
-                      fontSize: base * 0.04,
-                      color: AppColors.ink.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  SizedBox(height: base * 0.05),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: base * 0.06),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(base * 0.05),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.indigo.withValues(alpha: 0.1),
-                          blurRadius: base * 0.05,
-                          offset: Offset(0, base * 0.015),
-                        ),
-                      ],
-                    ),
-                    child: Column(
+              constraints: BoxConstraints(maxWidth: context.lebarKonten),
+              child: context.isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${quiz.skor}/${quiz.totalSoal}',
-                          style: TextStyle(
-                            fontSize: base * 0.16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.indigo,
-                            height: 1.1,
-                          ),
-                        ),
-                        Text(
-                          'Nilai ${quiz.nilai}',
-                          style: TextStyle(
-                            fontSize: base * 0.045,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.ink,
-                          ),
-                        ),
-                        SizedBox(height: base * 0.02),
-                        Text(
-                          _pesan(quiz.nilai),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: base * 0.038,
-                            color: AppColors.ink.withValues(alpha: 0.7),
-                          ),
-                        ),
+                        Expanded(child: ringkasan),
+                        SizedBox(width: u * 0.08),
+                        Expanded(child: review),
+                      ],
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ringkasan,
+                        SizedBox(height: u * 0.08),
+                        review,
                       ],
                     ),
-                  ),
-                  SizedBox(height: base * 0.07),
-                  PrimaryButton(
-                    label: 'Main Lagi',
-                    onPressed: () {
-                      context.read<QuizProvider>().ulangi();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const QuizScreen()),
-                      );
-                    },
-                  ),
-                  SizedBox(height: base * 0.03),
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.popUntil(context, (route) => route.isFirst),
-                    child: Text(
-                      'Kembali ke Beranda',
-                      style: TextStyle(
-                        fontSize: base * 0.038,
-                        color: AppColors.indigo,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ),
